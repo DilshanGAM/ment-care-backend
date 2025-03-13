@@ -74,7 +74,16 @@ def login_user(data):
         
         return 200, {
             "message": "Login successful",
-            "token": token
+            "token": token ,
+            "user": {
+                "email": user["email"],
+                "type": user["type"],
+                "first_name": user["first_name"],
+                "last_name": user["last_name"],
+                "phone": user["phone"],
+                "diseases": user["diseases"],
+                "image": user["image"],
+            }
         }
         
     except Exception as e:
