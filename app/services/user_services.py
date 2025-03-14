@@ -11,7 +11,15 @@ JWT_ALGORITHM = "HS256"
 # Access the users collection
 users_collection = db.get_collection("users")
 
-def create_user(data):
+def create_user(request):
+    data = request.json
+    #check if the data["type"] is admin and the request.user is admin
+    if data["type"]=="admin" and request.user.type !="admin":
+        return 403,"Only admins can create admin accounts"
+    if data["type"]=="doctor" and request.user.type !="admin":
+        return 403,"Only admins can create admin accounts"
+    if request.type == "patient":
+        return 403,"Patients are not allowed to create new user accounts"
     try:
         salt = bcrypt.gensalt()
         hashed_password = bcrypt.hashpw(data["password"].encode('utf-8'), salt)
@@ -96,3 +104,37 @@ def get_user(request):
     if not user:
         return 404, "User not found"
     return 200, jsonify(user)
+def get_all_users_service(user):
+    if user["type"] != "admin":
+        return 403, "Unauthorized"
+    try:
+        users = users_collection.find({}, {"password": 0, "salt": 0 , "created_at": 0 , "_id": 0})
+        users_list = list(users)
+        return 200, jsonify(users_list)
+    except Exception as e:
+        print(e)
+        print("Error getting users")
+        return 500, "Internal server error"
+def get_all_doctors_service(user):
+    if user["type"] != "admin":
+        return 403, "Unauthorized"
+    try:
+        doctors = users_collection.find({"type": "doctor"}, {"password": 0, "salt": 0 , "created_at": 0 , "_id": 0})
+        doctors_list = list(doctors)
+        return 200, jsonify(doctors_list)
+    except Exception as e:
+        print(e)
+        print("Error getting doctors")
+        return 500, "Internal server error"
+def get_all_patients_service(user):
+    #only doctor and admin can access
+    if user["type"] != "admin" and user["type"] != "doctor":
+        return 403, "Unauthorized"
+    try:
+        patients = users_collection.find({"type": "patient"}, {"password": 0, "salt": 0 , "created_at": 0 , "_id": 0})
+        patients_list = list(patients)
+        return 200, jsonify(patients_list)
+    except Exception as e:
+        print(e)
+        print("Error getting patients")
+        return 500, "Internal server error"
