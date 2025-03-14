@@ -12,13 +12,13 @@ JWT_ALGORITHM = "HS256"
 users_collection = db.get_collection("users")
 
 def create_user(request):
-    data = request.json
     #check if the data["type"] is admin and the request.user is admin
-    if data["type"]=="admin" and request.user.type !="admin":
+    data = request.json
+    if data["type"]=="admin" and request.user["type"] !="admin":
         return 403,"Only admins can create admin accounts"
-    if data["type"]=="doctor" and request.user.type !="admin":
+    if data["type"]=="doctor" and request.user["type"] !="admin":
         return 403,"Only admins can create admin accounts"
-    if request.type == "patient":
+    if request.user["type"] == "patient":
         return 403,"Patients are not allowed to create new user accounts"
     try:
         salt = bcrypt.gensalt()
