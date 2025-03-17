@@ -21,7 +21,6 @@ def jwt_required(f):
         
         try:
             decoded_payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
-            print(decoded_payload)
             # Attach user data to the request context
             request.user = decoded_payload
         except jwt.ExpiredSignatureError:
