@@ -15,3 +15,16 @@ def chat():
 def chats():
     response,status_code = get_all_chats(request)
     return response, status_code
+@depression_bp.route('/predict-emotion', methods=['POST'])
+def predict_emotion():
+    data = request.json
+    img_url = data.get("img_url")    
+    statuscode,response = predict_emotions_from_image_url(img_url)
+    return response,statuscode
+@depression_bp.route('/predict-text', methods=['POST'])
+def predict_text():
+    data = request.json
+    text = data.get("message")    
+    statuscode,response = predict_depression_from_text_service(text)
+    return response,statuscode
+

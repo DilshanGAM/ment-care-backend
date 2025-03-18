@@ -46,3 +46,8 @@ def get_all_patients():
 def get_all_doctors():
     status_code, response = get_all_doctors_service(request.user)
     return response, status_code
+#get users by disease the disease is in the url
+@user_bp.route('/patients/<disease>', methods=['GET'])
+def get_all_patients_by_disease(disease):
+    status_code, response = get_all_patients_by_disease_service( disease)
+    return response, status_code

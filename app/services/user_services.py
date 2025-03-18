@@ -138,3 +138,21 @@ def get_all_patients_service(user):
         print(e)
         print("Error getting patients")
         return 500, "Internal server error"
+def get_all_patients_by_disease_service(disease):
+    print(disease)
+    try:
+        # Find patients who have the given disease in their diseases array
+        patients = users_collection.find(
+            {"type": "patient", "diseases": disease},
+            {"password": 0, "salt": 0, "created_at": 0, "_id": 0}
+        )
+
+        patients_list = list(patients)
+
+        return 200, jsonify(patients_list)
+
+    except Exception as e:
+        print(e)
+        print("Error getting patients by disease")
+        return 500, "Internal server error"
+
