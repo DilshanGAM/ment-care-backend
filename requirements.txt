@@ -8,6 +8,10 @@ python-dotenv==1.0.1
 pyjwt==2.10.1
 gunicorn==23.0.0
 google-genai
+numpy
+tensorflow
+pandas
+scikit-learn
 
 # # Optional: Useful for dev/debugging
 # Werkzeug==3.1.3
